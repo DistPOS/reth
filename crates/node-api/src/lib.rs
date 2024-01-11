@@ -16,3 +16,6 @@ pub use engine::{
     AttributesValidationError, EngineApiMessageVersion, EngineTypes, PayloadAttributes,
     PayloadBuilderAttributes, PayloadOrAttributes,
 };
+
+/// Traits and helper types used to abstract over EVM methods and types.
+pub mod evm;
