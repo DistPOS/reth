@@ -17,7 +17,7 @@
 //! ```no_run
 //! # use reth_rpc_types::engine::{PayloadAttributes as EthPayloadAttributes, PayloadId, Withdrawal};
 //! # use reth_primitives::{B256, ChainSpec, Address};
-//! # use reth_node_api::{EngineTypes, EngineApiMessageVersion, validate_version_specific_fields, AttributesValidationError, PayloadAttributes, PayloadBuilderAttributes};
+//! # use reth_node_api::{EngineTypes, EngineApiMessageVersion, validate_version_specific_fields, AttributesValidationError, PayloadAttributes, PayloadBuilderAttributes, validate_version_specific_fields};
 //! # use reth_payload_builder::EthPayloadBuilderAttributes;
 //! # use serde::{Deserialize, Serialize};
 //! # use thiserror::Error;
@@ -121,6 +121,16 @@
 //! impl EngineTypes for CustomEngineTypes {
 //!    type PayloadAttributes = CustomPayloadAttributes;
 //!    type PayloadBuilderAttributes = CustomPayloadBuilderAttributes;
+//!
+//!    fn validate_version_specific_fields<Type>(
+//!        chain_spec: &ChainSpec,
+//!        version: EngineApiMessageVersion,
+//!        payload_or_attrs: &PayloadOrAttributes<'_, Type>,
+//!    ) -> Result<(), AttributesValidationError>
+//!    where
+//!        Type: PayloadAttributes {
+//!        validate_version_specific_fields(chain_spec, version, payload_or_attrs)
+//!    }
 //! }
 //! ```
 
