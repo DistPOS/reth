@@ -1,0 +1,21 @@
+[package]
+name = "reth-consensus-distpos"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+reth-consensus = { workspace = true }
+reth-consensus-common = { workspace = true }
+reth-primitives = { workspace = true }
+reth-errors = { workspace = true }
+reth-storage-api = { workspace = true }
+reth-db-api = { workspace = true }
+alloy-primitives = { workspace = true }
+alloy-rlp = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+reth-testing-utils = { workspace = true }

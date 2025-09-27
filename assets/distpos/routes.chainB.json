@@ -1,0 +1,12 @@
+{
+  "routes": {
+    "chainA": [
+      {
+        "label": "local-a1",
+        "enode": "enode://PUBKEY-A1@127.0.0.1:30303",
+        "ip": "127.0.0.1",
+        "port": 30303
+      }
+    ]
+  }
+}

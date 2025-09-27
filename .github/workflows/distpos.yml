@@ -1,0 +1,71 @@
+name: DistPOS scaffolding CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  distpos-tests-build:
+    name: Build distpos-tests and list tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build tests crate
+        run: cargo build -p distpos-tests
+
+      - name: List tests (including ignored)
+        run: cargo test -p distpos-tests -- --list
+
+  distpos-docs-check:
+    name: Validate docs/distpos presence and anchors
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify docs files exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -la docs/distpos/README.md
+          ls -la docs/distpos/stage0.md
+          ls -la docs/distpos/stage1.md
+          ls -la docs/distpos/stage2.md
+          ls -la docs/distpos/stage3.md
+          ls -la docs/distpos/stage4.md
+          ls -la docs/distpos/stage5.md
+          ls -la docs/distpos/stage6.md
+          ls -la docs/distpos/stage7.md
+
+      - name: Check that referenced source docs exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -la DistPOS_docs/DistPos_descr.txt
+          ls -la DistPOS_docs/DistPOS_TRD.txt
+          ls -la DistPOS_docs/stages.txt
+          ls -la DistPOS_docs/test_suit_DistPOS.txt
+
+      - name: Basic link presence check (anchors are plain-file links)
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R "DistPOS_docs/" docs/distpos/*.md >/dev/null
+          echo "Basic anchor presence verified."

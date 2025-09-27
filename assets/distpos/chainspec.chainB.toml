@@ -1,0 +1,22 @@
+# DistPOS Chain B chainspec template (development)
+# Referenced by harness/tools to spawn local multi-node networks.
+
+name = "distpos-chainB"
+chain_id = 200
+network_id = 200
+
+# Path to the genesis JSON for this chain (relative to repo root).
+genesis_file = "assets/distpos/genesis.chainB.json"
+
+# Bootnodes for local testing (fill with real enodes when available).
+bootnodes = [
+  # "enode://PUBKEY@127.0.0.1:30304",
+]
+
+[consensus]
+# Placeholder marker indicating DistPOS consensus will be used for this network.
+engine = "distpos"
+
+[telemetry]
+# Prometheus metrics port recommendation for local B nodes (starting base).
+metrics_base_port = 9101
