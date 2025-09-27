@@ -14,6 +14,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tracing = "0.1"
 eyre = "0.6"
+alloy-primitives.workspace = true
 
 # Optional workspace dependencies, enabled by feature "reth-workspace".
 # These will resolve once the crate is added to the root workspace.

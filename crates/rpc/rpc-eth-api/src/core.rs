@@ -378,6 +378,14 @@ pub trait EthApi<TxReq: RpcObject, T: RpcObject, B: RpcObject, R: RpcObject, H: 
         address: Address,
         block: BlockId,
     ) -> RpcResult<alloy_rpc_types_eth::AccountInfo>;
+
+    /// DistPOS: Stake as validator
+    #[method(name = "DistPOS_stake")]
+    async fn distpos_stake(&self, amount: U256) -> RpcResult<B256>;
+
+    /// DistPOS: Get validator status
+    #[method(name = "DistPOS_validatorStatus")]
+    async fn distpos_validator_status(&self, address: Address) -> RpcResult<serde_json::Value>;
 }
 
 #[async_trait::async_trait]
@@ -853,5 +861,21 @@ where
     ) -> RpcResult<alloy_rpc_types_eth::AccountInfo> {
         trace!(target: "rpc::eth", "Serving eth_getAccountInfo");
         Ok(EthState::get_account_info(self, address, block).await?)
+    }
+
+    /// Handler for: `DistPOS_stake`
+    async fn distpos_stake(&self, amount: U256) -> RpcResult<B256> {
+        trace!(target: "rpc::eth", ?amount, "Serving DistPOS_stake");
+        // Placeholder: send a transaction to stake
+        // In real implementation, this would create and send a staking transaction
+        Err(internal_rpc_err("DistPOS staking not implemented yet"))
+    }
+
+    /// Handler for: `DistPOS_validatorStatus`
+    async fn distpos_validator_status(&self, address: Address) -> RpcResult<serde_json::Value> {
+        trace!(target: "rpc::eth", ?address, "Serving DistPOS_validatorStatus");
+        // Placeholder: query validator status
+        // In real implementation, this would query the consensus for validator info
+        Err(internal_rpc_err("DistPOS validator status not implemented yet"))
     }
 }

@@ -3032,6 +3032,7 @@ dependencies = [
 name = "distpos-tests"
 version = "0.1.0"
 dependencies = [
+ "alloy-primitives",
  "eyre",
  "jsonrpsee",
  "reth-e2e-test-utils",
@@ -7631,6 +7632,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "reth-consensus-distpos"
+version = "0.1.0"
+dependencies = [
+ "alloy-consensus",
+ "alloy-primitives",
+ "alloy-rlp",
+ "reth-consensus",
+ "reth-consensus-common",
+ "reth-db-api",
+ "reth-errors",
+ "reth-primitives",
+ "reth-primitives-traits",
+ "reth-storage-api",
+ "reth-testing-utils",
+ "serde",
+ "thiserror 2.0.16",
+ "tracing",
+]
+
+[[package]]
 name = "reth-db"
 version = "1.8.1"
 dependencies = [
@@ -10212,6 +10233,7 @@ dependencies = [
  "reth-trie-common",
  "revm",
  "revm-inspectors",
+ "serde_json",
  "tokio",
  "tracing",
 ]

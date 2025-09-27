@@ -8,10 +8,12 @@ publish = false
 reth-consensus = { workspace = true }
 reth-consensus-common = { workspace = true }
 reth-primitives = { workspace = true }
+reth-primitives-traits = { workspace = true }
 reth-errors = { workspace = true }
 reth-storage-api = { workspace = true }
 reth-db-api = { workspace = true }
 alloy-primitives = { workspace = true }
+alloy-consensus = { workspace = true }
 alloy-rlp = { workspace = true }
 tracing = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
