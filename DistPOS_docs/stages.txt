@@ -1,0 +1,132 @@
+﻿Inputs reviewed
+    • Scope sources:
+        ◦ Project description: DistPOS_docs/DistPos_descr.txt
+        ◦ Technical requirements: DistPOS_docs/DistPOS_TRD.txt
+Estimation method and assumptions
+    • What “Specialist roles” means here: total GPT‑5 context usage across the full lifecycle (architecture, coding assistance, code review, debugging triage, technical writing), not compute or engineer-hours.
+    • Repo baseline: Reth is a large, modular Rust client; integration is additive via new crates, Execution Extensions (ExEx), and RPC extensions per DistPOS_docs/DistPOS_TRD.txt. No monolithic fork planned.
+    • Specialist role drivers:
+        ◦ Breadth of changes across consensus, txpool, P2P subprotocols, RPC, ExEx, and Solidity contracts.
+        ◦ Iterative debugging and multi-node testnets.
+        ◦ Dual-network e2e tests for interchain and Merkle proof paths.
+        ◦ Documentation and operator-facing guides.
+    • Role mapping across all stages:
+        ◦ Architect = design docs, API/trait contracts, integration and test strategy.
+        ◦ Coder = Rust crates, Solidity contracts, glue, configs.
+        ◦ Reviewer = structured code reviews and design reviews.
+        ◦ Debugger = failure triage, instrumentation, test failure analysis.
+        ◦ Tech Writer = operator/dev docs, RPC references, runbooks.
+Stage-by-stage Specialist role budget in millions of Specialist roles (M tok)
+Totals include per sub-role allocations. Substages are high-level and aligned to DistPOS_docs/DistPOS_TRD.txt.
+Stage 0. Repo mapping, feasibility, and environment setup
+    • Scope: confirm Node Builder hooks, ExEx feasibility, RPC extension points, initial local testnet topology.
+    • Specialist roles efforts:
+        ◦ Architect: 1.2
+        ◦ Coder: 0.3
+        ◦ Reviewer: 0.2
+        ◦ Debugger: 0.1
+        ◦ Tech Writer: 0.2
+    • Stage 0 total: 2.0
+Stage 1. DistPOS PoS core: staking and slashing, validator selection, RPC
+    • Scope:
+        ◦ New consensus crate skeleton and trait impls.
+        ◦ Stake accounting and slashing state-path; signature storage via block extraData.
+        ◦ RPC: Rust.DistPOS_stake(amount), Rust.DistPOS_validatorStatus(address), and test-only controls as noted.
+        ◦ Private testnet and scenarios (round-robin, slashing, hot-add validator).
+    • Specialist roles efforts:
+        ◦ Architect: 1.5
+        ◦ Coder: 4.0
+        ◦ Reviewer: 1.0
+        ◦ Debugger: 1.0
+        ◦ Tech Writer: 0.5
+    • Stage 1 total: 8.0
+Stage 2. Underwriting of transactions (endorsements) + P2P subprotocol + txpool integration
+    • Scope:
+        ◦ Underwriting module integration into txpool admission; “await endorsements” state.
+        ◦ P2P subprotocol messages: Rust.UnderwriteRequest, Rust.UnderwriteResponse, optional cancel/timeout logic.
+        ◦ RPC: Rust.DistPOS_listEndorsements(tx_hash), Rust.DistPOS_endorseTransaction(tx_hash).
+        ◦ Locking “available stake” and unroll on cancellation/expiry.
+        ◦ Multi-node tests for large tx flow, refusal/timeout, partial endorsements.
+    • Specialist roles efforts:
+        ◦ Architect: 2.0
+        ◦ Coder: 6.0
+        ◦ Reviewer: 1.5
+        ◦ Debugger: 2.0
+        ◦ Tech Writer: 0.5
+    • Stage 2 total: 12.0
+Stage 3. Interchain routing, Merkle proof request/verification, ExEx hook-up
+    • Scope:
+        ◦ Interchain module: routing table, cross-chain envelope, inbox states (PendingProof → Verified).
+        ◦ P2P messages for proof exchange.
+        ◦ RPC: Rust.DistPOS_sendCrossChainTransaction(chain,to,data,value), Rust.DistPOS_getPendingProofs(), Rust.DistPOS_provideProof(...), Rust.DistPOS_getCrossChainStatus(tx_hash).
+        ◦ Two-network e2e test harness; atomicity checks and timeouts.
+    • Specialist roles efforts:
+        ◦ Architect: 2.5
+        ◦ Coder: 8.0
+        ◦ Reviewer: 2.0
+        ◦ Debugger: 3.0
+        ◦ Tech Writer: 0.5
+    • Stage 3 total: 16.0
+Stage 4. Reputation model (nodes and chains) + policy hooks
+    • Scope:
+        ◦ Reputation store, scoring and event ingestion from consensus, underwriting, interchain.
+        ◦ RPC: Rust.DistPOS_getNodeReputation(address), Rust.DistPOS_getChainReputation(chain_id), Rust.DistPOS_setReputation(target,value) for dev/test.
+        ◦ Policy hooks: txpool sorting, underwriting peer selection, interchain accept/deny by chain score.
+        ◦ Test scenarios: spammer degradation, chain-blocking by low rep, decay/recovery.
+    • Specialist roles efforts:
+        ◦ Architect: 1.2
+        ◦ Coder: 3.0
+        ◦ Reviewer: 0.8
+        ◦ Debugger: 1.5
+        ◦ Tech Writer: 0.5
+    • Stage 4 total: 7.0
+Stage 5. Smart contracts: staking, bridges, cross-call; genesis integration; ExEx glue
+    • Scope:
+        ◦ Solidity: Staking (slash/stake), Bridge pair (lock/release with corr-accounts), Cross-call.
+            ▪ Examples used in TRD: Solidity.StakingContract.slash(), Solidity.BridgeFromA.release(), Solidity.CrossChainCallContract.execute(bytes).
+        ◦ Genesis predeployment and addresses; node-side privileged/system tx builder; read-paths via StateProvider.
+        ◦ Foundry unit tests; Reth e2e with contracts in genesis.
+    • Specialist roles efforts:
+        ◦ Architect: 1.5
+        ◦ Coder: 5.0
+        ◦ Reviewer: 1.5
+        ◦ Debugger: 2.0
+        ◦ Tech Writer: 1.0
+    • Stage 5 total: 11.0
+Stage 6. End-to-end integration, performance, and adversarial testing
+    • Scope:
+        ◦ Soak tests across multi-node/multi-chain.
+        ◦ Performance and instrumentation: logging, metrics, P2P throttling.
+        ◦ Adversarial: invalid proofs, double-sign, endorsement fraud, corr-account exhaustion.
+    • Specialist roles efforts:
+        ◦ Architect: 1.0
+        ◦ Coder: 2.0
+        ◦ Reviewer: 1.5
+        ◦ Debugger: 3.0
+        ◦ Tech Writer: 0.5
+    • Stage 6 total: 8.0
+Stage 7. DevOps, CI, release, docs and runbooks
+    • Scope:
+        ◦ CI jobs for Rust + Solidity tests; multi-network e2e smoke; reproducible builds.
+        ◦ Operator docs: network bootstrapping, RPC usage, troubleshooting, upgrade playbooks.
+    • Specialist roles efforts:
+        ◦ Architect: 0.6
+        ◦ Coder: 1.2
+        ◦ Reviewer: 0.3
+        ◦ Debugger: 0.6
+        ◦ Tech Writer: 1.3
+    • Stage 7 total: 4.0
+    • Stage 1: DistPOS consensus crate active on private testnet; RPC Rust.DistPOS_stake() usable; slashing path observable in state.
+    • Stage 2: Underwriting gate enforced; endorsements required beyond local stake; P2P requests/responses functioning across at least 3 nodes.
+    • Stage 3: Cross-chain tx flows from A→B with verified Merkle proof gating; status RPCs exposable; atomicity scenarios covered.
+    • Stage 4: Reputation affects underwriting peer selection and interchain acceptance; RPCs return dynamic scores.
+    • Stage 5: Contracts deployed in genesis; bridge corr-account checks mediate release; cross-call path executes msg.data.
+    • Stage 6: e2e stability over long runs; perf and adversarial suites passing thresholds.
+    • Stage 7: CI green across unit/integration; docs and runbooks complete.
+Citations to method and APIs are anchored to DistPOS_docs/DistPOS_TRD.txt lines where they are defined, for example:
+    • Rust.DistPOS_stake(), Rust.DistPOS_validatorStatus()
+    • Rust.UnderwriteRequest, Rust.UnderwriteResponse
+    • Rust.DistPOS_sendCrossChainTransaction(), Rust.DistPOS_getPendingProofs(), Rust.DistPOS_provideProof(), Rust.DistPOS_getCrossChainStatus()
+    • Rust.DistPOS_getNodeReputation(), Rust.DistPOS_getChainReputation(), Rust.DistPOS_setReputation()
+    • Solidity.StakingContract.slash(), Solidity.BridgeFromA.release(), Solidity.CrossChainCallContract.execute()
+

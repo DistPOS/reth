@@ -3029,6 +3029,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "distpos-tests"
+version = "0.1.0"
+dependencies = [
+ "eyre",
+ "jsonrpsee",
+ "reth-e2e-test-utils",
+ "reth-exex-test-utils",
+ "reth-node-builder",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "doctest-file"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
